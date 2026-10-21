@@ -1,11 +1,14 @@
-import * as Joi from 'joi'
+import { z } from 'zod';
 
-export const envValidationSchema = Joi.object({
-  NODE_ENV: Joi.string()
-    .valid('development', 'test', 'production')
+export const envValidationSchema = z.object({
+  NODE_ENV: z
+    .enum(['development', 'test', 'production'])
     .default('development'),
-  PORT: Joi.number().port().default(3000),
-  DATABASE_URL: Joi.string()
-    .uri({ scheme: ['postgresql', 'postgres'] })
-    .required(),
+  PORT: z.coerce.number().int().positive().default(3000),
+  DATABASE_URL: z
+    .string()
+    .refine(
+      (value) => /^postgres(ql)?:\/\//.test(value),
+      'DATABASE_URL must be a postgres connection string',
+    ),
 });

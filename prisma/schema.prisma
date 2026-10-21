@@ -9,7 +9,7 @@ datasource db {
 model Category {
   id String @id @default(uuid())
   name String @unique
-  createAt DateTime @default(now()) @map("created_at")
+  creatAt DateTime @default(now()) @map("created_at")
 
   book Book[]
 
