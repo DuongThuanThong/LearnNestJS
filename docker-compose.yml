@@ -9,6 +9,33 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d learn_nestjs"]
+      interval: 5s
+      retries: 10
 
+  migrate:
+    image: learn-nestjs-migrate:local
+    build:
+      context: .
+      target: migrate
+    environment:
+      DATABASE_URL: postgresql://app:app@db:5432/learn_nestjs
+    depends_on:
+      db: { condition: service_healthy }
+    command: ["npx", "prisma", "migrate", "deploy"]
+
+  app:
+    image: learn-nestjs:local
+    build:
+      context: .
+      target: runtime
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://app:app@db:5432/learn_nestjs
+    ports: ["3000:3000"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    
 volumes:
   pgdata:
