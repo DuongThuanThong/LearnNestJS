@@ -9,7 +9,7 @@ datasource db {
 model Category {
   id String @id @default(uuid())
   name String @unique
-  creatAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   book Book[]
 
@@ -20,16 +20,57 @@ model Book {
   id String @id @default(uuid())
   title String
   author String
-  isbn String @unique 
+  isbn String @unique
   price Decimal @db.Decimal(12,2)
 
   publishedAt DateTime? @map("published_at")
-  creatAt DateTime @default(now()) @map("create_at")
-  updateAt DateTime @updatedAt @map("update_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("update_at")
 
   categoryId String @map("category_id")
   category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   @@index([categoryId])
 
   @@map("books")
+}
+
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+model User{
+  id String @id @default(uuid())
+  fullName String @map("full_name")
+  email String @unique
+  password String
+  role Role @default(MEMBER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt  @map("updated_at")
+
+  token RefreshToken []
+  @@map("users")
+}
+
+model RefreshToken {
+  id String @id @default(uuid())
+  refreshToken String @unique @map("token")
+  motherTokenId String @map("mother_token_id")
+
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(6)
+  familyExpiresAt DateTime  @map("family_expires_at") @db.Timestamptz(6)
+  usedAt DateTime? @map("used_at")
+
+  revoked Boolean @default(false)
+  claims Json?
+
+  @@index([userId])
+  @@index([motherTokenId])
+  @@index([familyExpiresAt])
+  @@map("refresh_token")
 }

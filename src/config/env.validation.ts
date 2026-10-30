@@ -11,4 +11,8 @@ export const envValidationSchema = z.object({
       (value) => /^postgres(ql)?:\/\//.test(value),
       'DATABASE_URL must be a postgres connection string',
     ),
+
+  JWT_SECRET: z.string().min(32),
+  JWT_ISSUER: z.string().min(1),
+  JWT_AUDIENCE: z.string().min(1)
 });
