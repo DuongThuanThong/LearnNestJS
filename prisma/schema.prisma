@@ -54,10 +54,8 @@ model User{
 }
 
 model RefreshToken {
-  id String @id @default(uuid())
-  refreshToken String @unique @map("token")
-  motherTokenId String @map("mother_token_id")
-
+  id String @id
+  familyId String @map("family_id")
   userId String @map("user_id")
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -70,7 +68,7 @@ model RefreshToken {
   claims Json?
 
   @@index([userId])
-  @@index([motherTokenId])
+  @@index([familyId])
   @@index([familyExpiresAt])
   @@map("refresh_token")
 }

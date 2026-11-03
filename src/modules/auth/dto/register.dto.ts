@@ -10,7 +10,7 @@ export class RegisterDto{
   @IsString()
   @Length(3, 30)
   @IsNotEmpty({ message: 'Username is required' })
-  userName: string;
+  fullName: string;
 
   @IsPassword()
   @IsNotEmpty({ message: 'Password is required' })
