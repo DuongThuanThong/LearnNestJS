@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, Length, MaxLength, MinLength } from "class-validator";
-import { IsPassword } from "../decorators/is-password.decorator.js";
+import { IsPassword } from "../../../common/decorators/is-password.decorator.js";
 
 export class RegisterDto{
   
