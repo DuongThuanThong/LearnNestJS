@@ -24,9 +24,8 @@ export class CredentialsService {
   // Validates credentials and rehashes password if needed
   async verify(email: string, password: string): Promise<AppUser | null> {
     const found = await this.usersRepository.findCredentials(email)
-    if (!found || !found.password) return null
     const validPassword = await this.passwordHasher.verify(password, found?.password)
-    if (!validPassword) return null
+    if (!validPassword || !found || !found.password) return null
 
     if (this.passwordHasher.needsRehash(found.password)) {
       await this.usersRepository.updatePassword(found.user.id, await this.passwordHasher.hash(password))

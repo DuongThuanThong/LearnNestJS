@@ -11,7 +11,7 @@ export function IsPassword(options?: ValidationOptions) {
     IsString(),
     MaxLength(128, { message: `Password too long` }),
     IsStrongPassword(
-      { minLength: 12, minUppercase: 1, minNumbers: 1, minSymbols: 1 },
+      { minLength: 5, minUppercase: 1, minNumbers: 1, minSymbols: 1 },
       {
         message: `The password is too short; it must include uppercase letters, lowercase letters, numbers, and special characters.`,
         ...options,

@@ -26,7 +26,7 @@ export class UsersRepository {
   }
 
   findByEmail(email: string): Promise<AppUser | null>{
-    return this.prisma.user.findUnique({where:{ email: normalize(email), select:PUBLIC_SELECT }});
+     return this.prisma.user.findUnique({ where: { email: normalize(email) }, select:PUBLIC_SELECT });
   }
 
   async findCredentials(email: string): Promise<{user: AppUser; password: string | null } | null >{
